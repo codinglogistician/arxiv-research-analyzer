@@ -271,7 +271,7 @@ function HomePageContent() {
                 </div>
               ) : (
                 <Button variant="outline" size="sm" className="gap-2" asChild>
-                  <a href="/api/auth/signin">
+                  <a href="/signin">
                     <LogIn className="w-4 h-4" />
                     {language === 'pl' ? 'Zaloguj się' : 'Sign in'}
                   </a>
