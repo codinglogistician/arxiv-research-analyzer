@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ResearchSession {
+  id          String   @id @default(cuid())
+  topic       String
+  focusArea   String
+  status      String   @default("pending") // pending, searching, analyzing, completed, error
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  articles    Article[]
+  analysis    Analysis?
+}
+
+model Article {
+  id           String   @id @default(cuid())
+  arxivId      String?
+  title        String
+  authors      String
+  abstract     String?
+  pdfUrl       String?
+  arxivUrl     String?
+  publishedDate String?
+  content      String?
+  sessionId    String
+  session      ResearchSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Analysis {
+  id             String   @id @default(cuid())
+  sessionId      String   @unique
+  session        ResearchSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  summary        String
+  keyFindings    String   // JSON string of key findings
+  methodology    String?
+  conclusions    String?
+  recommendations String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
