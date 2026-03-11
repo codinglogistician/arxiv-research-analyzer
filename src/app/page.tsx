@@ -105,7 +105,7 @@ function HomePageContent() {
   useEffect(() => {
     fetchSessions();
     // Check for user session
-    fetch('/api/auth/session')
+    fetch('/api/auth/login')
       .then(res => res.json())
       .then(data => {
         if (data.user) setUser(data.user);
