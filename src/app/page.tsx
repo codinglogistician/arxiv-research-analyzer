@@ -105,7 +105,7 @@ function HomePageContent() {
   useEffect(() => {
     fetchSessions();
     // Check for user session
-    fetch('/api/auth/session')
+    fetch('/api/auth/login')
       .then(res => res.json())
       .then(data => {
         if (data.user) setUser(data.user);
@@ -271,7 +271,7 @@ function HomePageContent() {
                 </div>
               ) : (
                 <Button variant="outline" size="sm" className="gap-2" asChild>
-                  <a href="/api/auth/signin">
+                  <a href="/signin">
                     <LogIn className="w-4 h-4" />
                     {language === 'pl' ? 'Zaloguj się' : 'Sign in'}
                   </a>

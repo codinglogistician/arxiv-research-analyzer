@@ -1,8 +1,9 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID || '',
@@ -11,6 +12,24 @@ export const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: 'Email', type: 'email', placeholder: 'email@example.com' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        // Simple demo: accept any non-empty email/password
+        if (credentials?.email && credentials?.password) {
+          return {
+            id: '1',
+            name: credentials.email.split('@')[0],
+            email: credentials.email,
+          };
+        }
+        return null;
+      },
     }),
   ],
   callbacks: {
@@ -34,8 +53,8 @@ export const authOptions = {
     },
   },
   pages: {
-    signIn: '/',
-    error: '/',
+    signIn: '/signin',
+    error: '/signin',
   },
   session: {
     strategy: 'jwt',
@@ -44,4 +63,6 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET || 'arxiv-research-analyzer-secret-key-2024',
 };
 
-export default NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
