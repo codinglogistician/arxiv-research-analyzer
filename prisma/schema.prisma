@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -26,11 +26,11 @@ model Article {
   arxivId      String?
   title        String
   authors      String
-  abstract     String?
+  abstract     String?  @db.Text
   pdfUrl       String?
   arxivUrl     String?
   publishedDate String?
-  content      String?
+  content      String?  @db.Text
   sessionId    String
   session      ResearchSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
@@ -41,11 +41,11 @@ model Analysis {
   id             String   @id @default(cuid())
   sessionId      String   @unique
   session        ResearchSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  summary        String
-  keyFindings    String   // JSON string of key findings
-  methodology    String?
-  conclusions    String?
-  recommendations String?
+  summary        String   @db.Text
+  keyFindings    String   @db.Text // JSON string of key findings
+  methodology    String?  @db.Text
+  conclusions    String?  @db.Text
+  recommendations String? @db.Text
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
